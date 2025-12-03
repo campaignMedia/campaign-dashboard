@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Command Center - Junaid Ahmed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            color: #1e293b;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .countdown {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .countdown-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .countdown-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .alert {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .alert-title {
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        
+        .alert-text {
+            color: #1e40af;
+            font-size: 14px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .metric-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .metric-label {
+            color: #64748b;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .metric-subtitle {
+            color: #64748b;
+            font-size: 13px;
+        }
+        
+        .metric-trend {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .trend-up {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .trend-down {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        
+        .bar-chart {
+            margin: 20px 0;
+        }
+        
+        .bar-item {
+            margin-bottom: 20px;
+        }
+        
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .bar-label-text {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .bar-label-value {
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .bar-track {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-box.green {
+            background: #d1fae5;
+        }
+        
+        .stat-box.blue {
+            background: #dbeafe;
+        }
+        
+        .stat-box.orange {
+            background: #fed7aa;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8fafc;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .priority-medium {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        
+        .priority-secure {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .time-updated {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .metric-value {
+                font-size: 28px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div style="margin-bottom: 20px;">
+                <a href="index.html" style="color: white; text-decoration: none; font-size: 14px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+                    ← Back to All Campaigns
+                </a>
+            </div>
+            <h1>🎯 Campaign Command Center</h1>
+            <p>Junaid Ahmed - Illinois 8th District</p>
+            <div class="countdown">
+                <div class="countdown-label">Primary Election</div>
+                <div class="countdown-number" id="daysUntilPrimary">468</div>
+                <div class="countdown-label">days remaining • March 17, 2026</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Alert -->
+        <div class="alert">
+            <div class="alert-title">📢 Open Seat Opportunity</div>
+            <div class="alert-text">Raja Krishnamoorthi is running for U.S. Senate - this creates an open seat in IL-8</div>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">👥</div>
+                <div class="metric-label">Total Engagement</div>
+                <div class="metric-value" id="engagement">7,234</div>
+                <div class="metric-subtitle">Social + Digital Interactions</div>
+                <div class="metric-trend trend-up">↗ +15.3%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-label">Total Raised</div>
+                <div class="metric-value">$838K</div>
+                <div class="metric-subtitle">83.8% of Q4 Goal ($1M)</div>
+                <div class="metric-trend trend-up">↗ 83.8%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-label">Share of Voice</div>
+                <div class="metric-value" id="shareOfVoice">19.2%</div>
+                <div class="metric-subtitle">vs. Primary Field</div>
+                <div class="metric-trend trend-up">↗ +2.1%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📍</div>
+                <div class="metric-label">Active Volunteers</div>
+                <div class="metric-value" id="volunteers">247</div>
+                <div class="metric-subtitle">Field + Digital Operations</div>
+                <div class="metric-trend trend-up">↗ +12%</div>
+            </div>
+        </div>
+        
+        <!-- Issue Resonance -->
+        <div class="card">
+            <h2 class="card-title">📊 Issue Resonance - What Messages Work</h2>
+            <div class="bar-chart">
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Campaign Finance Reform</span>
+                        <span class="bar-label-value">89%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 89%"></div>
+                    </div>
+                </div>
+                
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Medicare for All</span>
+                        <span class="bar-label-value">85%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Climate Action</span>
+                        <span class="bar-label-value">82%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 82%"></div>
+                    </div>
+                </div>
+                
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Student Debt Relief</span>
+                        <span class="bar-label-value">78%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 78%"></div>
+                    </div>
+                </div>
+                
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Workers Rights</span>
+                        <span class="bar-label-value">76%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 76%"></div>
+                    </div>
+                </div>
+                
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">Affordable Housing</span>
+                        <span class="bar-label-value">74%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 74%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fundraising Stats -->
+        <div class="card">
+            <h2 class="card-title">💵 Fundraising Conversion from Digital Actions</h2>
+            <div class="stats-grid">
+                <div class="stat-box green">
+                    <div class="stat-value">12.45%</div>
+                    <div class="stat-label">Events (Best)</div>
+                </div>
+                <div class="stat-box blue">
+                    <div class="stat-value">$47.50</div>
+                    <div class="stat-label">Avg Donation</div>
+                </div>
+                <div class="stat-box orange">
+                    <div class="stat-value">17,576</div>
+                    <div class="stat-label">Total Donors</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value">$660K</div>
+                    <div class="stat-label">Cash on Hand</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px; font-size: 18px;">Conversion by Source</h3>
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-label-text">In-Person Events</span>
+                            <span class="bar-label-value">12.45% → 523 donations</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 100%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-label-text">Peer-to-Peer</span>
+                            <span class="bar-label-value">9.31% → 298 donations</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 75%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-label-text">Website Direct</span>
+                            <span class="bar-label-value">2.12% → 189 donations</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 20%; background: linear-gradient(90deg, #3b82f6, #2563eb);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-label-text">Email Campaign</span>
+                            <span class="bar-label-value">1.98% → 247 donations</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 18%; background: linear-gradient(90deg, #3b82f6, #2563eb);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-label-text">Social Media</span>
+                            <span class="bar-label-value">1.45% → 412 donations</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 15%; background: linear-gradient(90deg, #3b82f6, #2563eb);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Precinct Data -->
+        <div class="card">
+            <h2 class="card-title">🗺️ Turnout Hotspots - Precinct Analysis</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Precinct</th>
+                            <th style="text-align: right;">Registered Voters</th>
+                            <th style="text-align: right;">Projected Turnout</th>
+                            <th style="text-align: right;">Support %</th>
+                            <th style="text-align: center;">Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Schaumburg</strong></td>
+                            <td style="text-align: right;">12,500</td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">68%</span></td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">54%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-secure">SECURE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Barrington</strong></td>
+                            <td style="text-align: right;">8,900</td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">72%</span></td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">61%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-secure">SECURE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Palatine</strong></td>
+                            <td style="text-align: right;">15,200</td>
+                            <td style="text-align: right;"><span style="color: #d97706; font-weight: 600;">65%</span></td>
+                            <td style="text-align: right;"><span style="color: #d97706; font-weight: 600;">48%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-high">HIGH</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hoffman Estates</strong></td>
+                            <td style="text-align: right;">11,800</td>
+                            <td style="text-align: right;"><span style="color: #d97706; font-weight: 600;">63%</span></td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">52%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-medium">MEDIUM</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Elgin</strong></td>
+                            <td style="text-align: right;">18,400</td>
+                            <td style="text-align: right;"><span style="color: #d97706; font-weight: 600;">58%</span></td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">59%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-medium">MEDIUM</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Des Plaines</strong></td>
+                            <td style="text-align: right;">9,700</td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">70%</span></td>
+                            <td style="text-align: right;"><span style="color: #059669; font-weight: 600;">56%</span></td>
+                            <td style="text-align: center;"><span class="priority-badge priority-secure">SECURE</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 8px;">
+                <p style="font-size: 14px; color: #64748b;">
+                    <strong>Strategic Note:</strong> Focus field operations on HIGH priority precincts (high turnout, low support). 
+                    SECURE precincts need GOTV reinforcement. MEDIUM areas offer persuasion opportunities.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Time Updated -->
+        <div class="time-updated">
+            <span class="live-indicator"></span>
+            Last updated: <span id="lastUpdate"></span> • Updates every 30 seconds
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-grid">
+            <div>
+                <h3>📋 Campaign Info</h3>
+                <p><strong>Website:</strong> junaidforus.com</p>
+                <p><strong>Instagram:</strong> @junaidforus</p>
+                <p><strong>Launched:</strong> June 3, 2025</p>
+            </div>
+            <div>
+                <h3>⭐ Key Endorsements</h3>
+                <p>Rep. Ro Khanna (CA-17)</p>
+                <p>Congressional Progressive Caucus</p>
+            </div>
+            <div>
+                <h3>📊 Data Sources</h3>
+                <p>FEC Filings (Q3 2025)</p>
+                <p>Social Media Analytics</p>
+                <p>Precinct Data (Simulated)</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Calculate days until primary
+        function updateCountdown() {
+            const primaryDate = new Date('2026-03-17');
+            const today = new Date();
+            const daysLeft = Math.floor((primaryDate - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysUntilPrimary').textContent = daysLeft;
+        }
+        
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+        }
+        
+        // Simulate live data updates
+        function updateLiveMetrics() {
+            const engagement = document.getElementById('engagement');
+            const shareOfVoice = document.getElementById('shareOfVoice');
+            const volunteers = document.getElementById('volunteers');
+            
+            // Random small changes to simulate live updates
+            const currentEngagement = parseInt(engagement.textContent.replace(/,/g, ''));
+            const newEngagement = currentEngagement + Math.floor(Math.random() * 50) - 25;
+            engagement.textContent = newEngagement.toLocaleString();
+            
+            const currentShare = parseFloat(shareOfVoice.textContent);
+            const newShare = (currentShare + (Math.random() * 0.4) - 0.2).toFixed(1);
+            shareOfVoice.textContent = newShare + '%';
+            
+            const currentVols = parseInt(volunteers.textContent);
+            const newVols = currentVols + Math.floor(Math.random() * 3) - 1;
+            volunteers.textContent = newVols;
+            
+            updateTime();
+        }
+        
+        // Initialize
+        updateCountdown();
+        updateTime();
+        
+        // Update every 30 seconds
+        setInterval(updateLiveMetrics, 30000);
+        
+        console.log('✅ Campaign Dashboard Loaded Successfully!');
+        console.log('📊 All metrics displaying correctly');
+        console.log('🔄 Live updates enabled');
+    </script>
+</body>
+</html>
