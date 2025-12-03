@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            color: #1e293b;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header-content { max-width: 1200px; margin: 0 auto; }
+        .header h1 { font-size: 42px; margin-bottom: 10px; font-weight: 700; }
+        .header p { font-size: 18px; opacity: 0.9; }
+        .countdown {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .countdown-number { font-size: 36px; font-weight: bold; }
+        .countdown-label { font-size: 14px; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .alert {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .alert-title { font-weight: 700; color: #1e40af; margin-bottom: 5px; }
+        .alert-text { color: #1e40af; font-size: 14px; }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .metric-card:hover { transform: translateY(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .metric-icon { font-size: 32px; margin-bottom: 15px; }
+        .metric-label {
+            color: #64748b;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .metric-subtitle { color: #64748b; font-size: 13px; }
+        .metric-trend {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .trend-up { background: #d1fae5; color: #065f46; }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        .bar-chart { margin: 20px 0; }
+        .bar-item { margin-bottom: 20px; }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .bar-label-text { font-weight: 600; color: #1e293b; }
+        .bar-label-value { color: #64748b; font-weight: 600; }
+        .bar-track {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-box { padding: 20px; border-radius: 8px; text-align: center; }
+        .stat-box.green { background: #d1fae5; }
+        .stat-box.blue { background: #dbeafe; }
+        .stat-box.orange { background: #fed7aa; }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f8fafc; }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td { padding: 15px; border-bottom: 1px solid #e2e8f0; }
+        tbody tr:hover { background: #f8fafc; }
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .priority-high { background: #fee2e2; color: #991b1b; }
+        .priority-medium { background: #fed7aa; color: #92400e; }
+        .priority-secure { background: #d1fae5; color: #065f46; }
+        .api-status {
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .api-connected { background: #d1fae5; color: #065f46; }
+        .api-demo { background: #fed7aa; color: #92400e; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div style="margin-bottom: 20px;">
+                <a href="index.html" style="color: white; text-decoration: none; font-size: 14px; opacity: 0.8;">
+                    ← Back to All Campaigns
+                </a>
+            </div>
+            <h1 id="pageTitle">🎯 Campaign Command Center</h1>
+            <p id="candidateInfo">Loading...</p>
+            <div class="countdown">
+                <div class="countdown-label">Primary Election</div>
+                <div class="countdown-number" id="daysUntilPrimary">---</div>
+                <div class="countdown-label" id="primaryDateText">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div id="apiStatus" class="api-status api-demo">
+            ⚠️ Demo Mode - Using simulated data
+        </div>
+        
+        <div class="alert">
+            <div class="alert-title">📢 Campaign Status</div>
+            <div class="alert-text" id="alertText">Loading campaign information...</div>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">👥</div>
+                <div class="metric-label">Total Engagement</div>
+                <div class="metric-value" id="engagement">---</div>
+                <div class="metric-subtitle">Social + Digital</div>
+                <div class="metric-trend trend-up">↗ +15%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-label">Total Raised</div>
+                <div class="metric-value" id="totalRaised">---</div>
+                <div class="metric-subtitle" id="goalProgress">---</div>
+                <div class="metric-trend trend-up">↗ 83.8%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-label">Share of Voice</div>
+                <div class="metric-value" id="shareOfVoice">---</div>
+                <div class="metric-subtitle">vs. Primary Field</div>
+                <div class="metric-trend trend-up">↗ +2%</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📍</div>
+                <div class="metric-label">Active Volunteers</div>
+                <div class="metric-value" id="volunteers">---</div>
+                <div class="metric-subtitle">Field + Digital</div>
+                <div class="metric-trend trend-up">↗ +12%</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">📊 Issue Resonance</h2>
+            <div class="bar-chart" id="issueChart"></div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">💵 Fundraising Metrics</h2>
+            <div class="stats-grid">
+                <div class="stat-box green">
+                    <div class="stat-value">12.45%</div>
+                    <div class="stat-label">Events (Best)</div>
+                </div>
+                <div class="stat-box blue">
+                    <div class="stat-value" id="avgDonation">$47.50</div>
+                    <div class="stat-label">Avg Donation</div>
+                </div>
+                <div class="stat-box orange">
+                    <div class="stat-value" id="totalDonors">---</div>
+                    <div class="stat-label">Total Donors</div>
+                </div>
+                <div class="stat-box green">
+                    <div class="stat-value" id="cashOnHand">---</div>
+                    <div class="stat-label">Cash on Hand</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">🗺️ Turnout Hotspots</h2>
+            <div style="overflow-x-auto;">
+                <table id="precinctTable"></table>
+            </div>
+            <div style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <p style="color: #64748b; font-size: 14px; line-height: 1.6;">
+                    <strong style="color: #1e293b;">Strategic Note:</strong> Focus field operations on HIGH priority precincts (high turnout, low support). SECURE precincts need GOTV reinforcement. MEDIUM areas offer persuasion opportunities.
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; color: #64748b; font-size: 12px; margin: 20px 0;">
+            <span style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite;"></span>
+            Last updated: <span id="lastUpdateTime"></span> • Updates every 5 minutes
+        </div>
+        
+        <style>
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+        </style>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 40px 20px; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div>
+                <h3 style="margin-bottom: 15px; font-size: 18px;">📋 Campaign Info</h3>
+                <p style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;"><strong>Website:</strong> <span id="footerWebsite">Loading...</span></p>
+                <p style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;"><strong>Instagram:</strong> <span id="footerInstagram">Loading...</span></p>
+                <p style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;"><strong>Launched:</strong> June 3, 2025</p>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 15px; font-size: 18px;">⭐ Key Endorsements</h3>
+                <div id="footerEndorsements" style="font-size: 14px; opacity: 0.9;"></div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 15px; font-size: 18px;">📊 Data Sources</h3>
+                <p id="footerDataSources" style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Loading...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ============================================
+        // COPY CANDIDATES CONFIG FROM index.html
+        // ============================================
+        const CANDIDATES = {
+            junaidAhmed: {
+                id: 'junaid-ahmed',
+                name: "Junaid Ahmed",
+                district: "Illinois 8th District",
+                party: "Democratic",
+                primaryDate: "2026-03-17",
+                photoUrl: "https://secure.actblue.com/x/object/actblue-cyanotypes/replaced_images/list/733532/a9c2a006-1f64-4755-9c18-5679de7e1db7-JunaidAhmed-3464df39.jpg",
+                fecCandidateId: "H2IL08146",
+                fundraising: {
+                    totalRaised: 838383,
+                    goalQ4: 1000000,
+                    donorCount: 17576,
+                    cashOnHand: 659849
+                },
+                keyIssues: [
+                    { name: "Campaign Finance Reform", score: 89 },
+                    { name: "Medicare for All", score: 85 },
+                    { name: "Climate Action", score: 82 },
+                    { name: "Student Debt Relief", score: 78 },
+                    { name: "Workers Rights", score: 76 },
+                    { name: "Affordable Housing", score: 74 }
+                ],
+                endorsements: [
+                    "Rep. Ro Khanna (CA-17)",
+                    "Congressional Progressive Caucus"
+                ],
+                precincts: [
+                    { name: "Schaumburg", registered: 12500, turnout: 68, support: 54 },
+                    { name: "Barrington", registered: 8900, turnout: 72, support: 61 },
+                    { name: "Palatine", registered: 15200, turnout: 65, support: 48 },
+                    { name: "Hoffman Estates", registered: 11800, turnout: 63, support: 52 },
+                    { name: "Elgin", registered: 18400, turnout: 58, support: 59 },
+                    { name: "Des Plaines", registered: 9700, turnout: 70, support: 56 }
+                ],
+                website: "junaidforus.com",
+                instagram: "@junaidforus"
+            }
+        };
+        
+        // ============================================
+        // API CONFIG
+        // ============================================
+        const API_CONFIG = {
+            FEC_API_KEY: 'ooTfZxcACPrlnBlb9bwYPKscE2MQcYmGv5KCQoO1', // ADD YOUR FEC API KEY HERE
+            GOOGLE_SHEETS_URL: '', // ADD YOUR GOOGLE SHEETS URL HERE
+            INSTAGRAM_ACCESS_TOKEN: '', // ADD YOUR INSTAGRAM TOKEN HERE
+            INSTAGRAM_ACCOUNT_ID: '', // ADD YOUR INSTAGRAM ACCOUNT ID HERE
+            UPDATE_INTERVAL: 300000 // 5 minutes
+        };
+        
+        // ============================================
+        // GET CURRENT CANDIDATE
+        // ============================================
+        const urlParams = new URLSearchParams(window.location.search);
+        const candidateId = urlParams.get('candidate');
+        const candidate = Object.values(CANDIDATES).find(c => c.id === candidateId);
+        
+        if (!candidate) {
+            document.body.innerHTML = '<div style="text-align:center;padding:100px;"><h1>Candidate not found</h1><p><a href="index.html">← Back to home</a></p></div>';
+        }
+        
+        // ============================================
+        // API FUNCTIONS
+        // ============================================
+        async function fetchFECData() {
+            if (!API_CONFIG.FEC_API_KEY || !candidate.fecCandidateId) return null;
+            
+            try {
+                const response = await fetch(
+                    `https://api.open.fec.gov/v1/candidate/${candidate.fecCandidateId}/totals/?api_key=${API_CONFIG.FEC_API_KEY}&sort_hide_null=true&per_page=1`
+                );
+                
+                if (!response.ok) return null;
+                
+                const data = await response.json();
+                const latest = data.results[0];
+                
+                return {
+                    totalRaised: latest.receipts || 0,
+                    cashOnHand: latest.cash_on_hand_end_period || 0,
+                    donorCount: latest.individual_itemized_contributions || 0
+                };
+            } catch (error) {
+                console.error('FEC API error:', error);
+                return null;
+            }
+        }
+        
+        async function fetchGoogleSheetsData() {
+            if (!API_CONFIG.GOOGLE_SHEETS_URL) return null;
+            
+            try {
+                const response = await fetch(API_CONFIG.GOOGLE_SHEETS_URL);
+                const csvText = await response.text();
+                const rows = csvText.split('\n').slice(1);
+                const lastRow = rows[rows.length - 1].split(',');
+                
+                return {
+                    engagement: parseInt(lastRow[1]) || 0,
+                    volunteers: parseInt(lastRow[2]) || 0,
+                    shareOfVoice: parseFloat(lastRow[3]) || 0
+                };
+            } catch (error) {
+                console.error('Google Sheets error:', error);
+                return null;
+            }
+        }
+        
+        async function fetchInstagramData() {
+            if (!API_CONFIG.INSTAGRAM_ACCESS_TOKEN || !API_CONFIG.INSTAGRAM_ACCOUNT_ID) return null;
+            
+            try {
+                const insightsResponse = await fetch(
+                    `https://graph.instagram.com/${API_CONFIG.INSTAGRAM_ACCOUNT_ID}/insights?metric=impressions,reach,follower_count&period=day&access_token=${API_CONFIG.INSTAGRAM_ACCESS_TOKEN}`
+                );
+                
+                if (!insightsResponse.ok) return null;
+                
+                const insights = await insightsResponse.json();
+                
+                const mediaResponse = await fetch(
+                    `https://graph.instagram.com/${API_CONFIG.INSTAGRAM_ACCOUNT_ID}/media?fields=like_count,comments_count&access_token=${API_CONFIG.INSTAGRAM_ACCESS_TOKEN}`
+                );
+                
+                const media = await mediaResponse.json();
+                
+                const totalEngagement = media.data ? media.data.reduce((sum, post) => 
+                    sum + (post.like_count || 0) + (post.comments_count || 0), 0
+                ) : 0;
+                
+                return {
+                    impressions: insights.data?.find(m => m.name === 'impressions')?.values[0]?.value || 0,
+                    reach: insights.data?.find(m => m.name === 'reach')?.values[0]?.value || 0,
+                    followers: insights.data?.find(m => m.name === 'follower_count')?.values[0]?.value || 0,
+                    engagement: totalEngagement
+                };
+            } catch (error) {
+                console.error('Instagram API error:', error);
+                return null;
+            }
+        }
+        
+        // ============================================
+        // UPDATE DASHBOARD
+        // ============================================
+        async function updateDashboard() {
+            const fecData = await fetchFECData();
+            const sheetsData = await fetchGoogleSheetsData();
+            const instagramData = await fetchInstagramData();
+            
+            // Update page title
+            document.getElementById('candidateInfo').textContent = `${candidate.name} - ${candidate.district}`;
+            document.getElementById('alertText').textContent = `${candidate.party} Primary • ${candidate.district}`;
+            
+            // Calculate days
+            const daysLeft = Math.floor((new Date(candidate.primaryDate) - new Date()) / (1000*60*60*24));
+            document.getElementById('daysUntilPrimary').textContent = daysLeft;
+            document.getElementById('primaryDateText').textContent = `days remaining • ${new Date(candidate.primaryDate).toLocaleDateString()}`;
+            
+            // Use real or demo data - prioritize Instagram/Sheets for engagement
+            const data = {
+                totalRaised: fecData?.totalRaised || candidate.fundraising.totalRaised,
+                cashOnHand: fecData?.cashOnHand || candidate.fundraising.cashOnHand,
+                donorCount: fecData?.donorCount || candidate.fundraising.donorCount,
+                engagement: instagramData?.engagement || sheetsData?.engagement || Math.floor(6000 + Math.random() * 2000),
+                volunteers: sheetsData?.volunteers || Math.floor(220 + Math.random() * 30),
+                shareOfVoice: sheetsData?.shareOfVoice || (18 + Math.random() * 4).toFixed(1)
+            };
+            
+            // Update status indicator
+            const connectedAPIs = [];
+            if (fecData) connectedAPIs.push('FEC');
+            if (sheetsData) connectedAPIs.push('Google Sheets');
+            if (instagramData) connectedAPIs.push('Instagram');
+            
+            if (connectedAPIs.length > 0) {
+                document.getElementById('apiStatus').className = 'api-status api-connected';
+                document.getElementById('apiStatus').textContent = '✅ Live Data - Connected to ' + connectedAPIs.join(' + ');
+            }
+            
+            // Update metrics
+            document.getElementById('engagement').textContent = data.engagement.toLocaleString();
+            document.getElementById('totalRaised').textContent = '$' + (data.totalRaised / 1000).toFixed(0) + 'K';
+            document.getElementById('goalProgress').textContent = 
+                ((data.totalRaised / candidate.fundraising.goalQ4) * 100).toFixed(1) + '% of Goal';
+            document.getElementById('shareOfVoice').textContent = data.shareOfVoice + '%';
+            document.getElementById('volunteers').textContent = data.volunteers;
+            document.getElementById('cashOnHand').textContent = '$' + (data.cashOnHand / 1000).toFixed(0) + 'K';
+            document.getElementById('totalDonors').textContent = data.donorCount.toLocaleString();
+            document.getElementById('avgDonation').textContent = '$' + (data.totalRaised / data.donorCount).toFixed(2);
+            
+            // Render charts
+            renderIssueChart();
+            renderPrecinctTable();
+            
+            // Update footer
+            document.getElementById('footerWebsite').textContent = candidate.website;
+            document.getElementById('footerInstagram').textContent = candidate.instagram;
+            document.getElementById('footerEndorsements').innerHTML = candidate.endorsements.map(e => 
+                `<p style="margin-bottom: 8px;">${e}</p>`
+            ).join('');
+            
+            // Update data sources footer
+            const sources = [];
+            if (fecData) sources.push('FEC Filings (Live)');
+            else sources.push('FEC Filings (Q3 2025)');
+            if (instagramData) sources.push('Instagram API (Live)');
+            else sources.push('Social Media Analytics');
+            if (sheetsData) sources.push('Google Sheets (Live)');
+            sources.push('Precinct Data (Simulated)');
+            
+            document.getElementById('footerDataSources').innerHTML = sources.map(s => 
+                `<p style="margin-bottom: 8px;">${s}</p>`
+            ).join('');
+            
+            // Update timestamp
+            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function renderIssueChart() {
+            const html = candidate.keyIssues.map(issue => `
+                <div class="bar-item">
+                    <div class="bar-label">
+                        <span class="bar-label-text">${issue.name}</span>
+                        <span class="bar-label-value">${issue.score}%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: ${issue.score}%"></div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('issueChart').innerHTML = html;
+        }
+        
+        function renderPrecinctTable() {
+            const html = `
+                <thead>
+                    <tr>
+                        <th>Precinct</th>
+                        <th style="text-align: right;">Registered</th>
+                        <th style="text-align: right;">Turnout</th>
+                        <th style="text-align: right;">Support</th>
+                        <th style="text-align: center;">Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${candidate.precincts.map(p => `
+                        <tr>
+                            <td><strong>${p.name}</strong></td>
+                            <td style="text-align: right;">${p.registered.toLocaleString()}</td>
+                            <td style="text-align: right;">
+                                <span style="color: ${p.turnout > 65 ? '#059669' : '#d97706'}; font-weight: 600;">
+                                    ${p.turnout}%
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                <span style="color: ${p.support > 55 ? '#059669' : '#d97706'}; font-weight: 600;">
+                                    ${p.support}%
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                ${p.support < 50 && p.turnout > 65 
+                                    ? '<span class="priority-badge priority-high">HIGH</span>'
+                                    : p.support > 55 && p.turnout < 65 
+                                        ? '<span class="priority-badge priority-medium">MEDIUM</span>'
+                                        : '<span class="priority-badge priority-secure">SECURE</span>'}
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            
+            document.getElementById('precinctTable').innerHTML = html;
+        }
+        
+        // Initialize
+        if (candidate) {
+            updateDashboard();
+            setInterval(updateDashboard, API_CONFIG.UPDATE_INTERVAL);
+        }
+        
+        console.log('✅ Dashboard loaded for:', candidate?.name);
+    </script>
+</body>
+</html>

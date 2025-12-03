@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Performance Dashboard - Home</title>
+    <title>Campaign Dashboard - Home</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
@@ -18,19 +13,13 @@
             min-height: 100vh;
             padding: 40px 20px;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
+        .container { max-width: 1400px; margin: 0 auto; }
         .header {
             text-align: center;
             margin-bottom: 60px;
             padding-bottom: 40px;
             border-bottom: 2px solid rgba(255,255,255,0.1);
         }
-        
         .header h1 {
             font-size: 48px;
             font-weight: 800;
@@ -40,20 +29,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .header p {
-            font-size: 18px;
-            color: #94a3b8;
-            margin-bottom: 10px;
-        }
-        
+        .header p { font-size: 18px; color: #94a3b8; margin-bottom: 10px; }
         .candidates-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
-        
         .candidate-card {
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
             border-radius: 20px;
@@ -63,39 +45,41 @@
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.1);
         }
-        
         .candidate-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
             border-color: #3b82f6;
         }
-        
         .candidate-image {
             width: 100%;
             height: 300px;
             object-fit: cover;
-            object-position: center;
             background: linear-gradient(135deg, #1e293b, #334155);
         }
-        
-        .candidate-info {
-            padding: 25px;
+        .candidate-info { padding: 25px; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
         }
-        
         .candidate-name {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 8px;
             color: white;
         }
-        
         .candidate-district {
             font-size: 16px;
             color: #3b82f6;
             font-weight: 600;
             margin-bottom: 15px;
         }
-        
         .candidate-party {
             display: inline-block;
             padding: 6px 14px;
@@ -107,7 +91,6 @@
             text-transform: uppercase;
             margin-bottom: 15px;
         }
-        
         .candidate-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -116,27 +99,23 @@
             padding-top: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-        
         .stat-box {
             text-align: center;
             padding: 12px;
             background: rgba(59, 130, 246, 0.1);
             border-radius: 10px;
         }
-        
         .stat-box-value {
             font-size: 20px;
             font-weight: 700;
             color: #60a5fa;
             margin-bottom: 4px;
         }
-        
         .stat-box-label {
             font-size: 11px;
             color: #94a3b8;
             text-transform: uppercase;
         }
-        
         .view-dashboard-btn {
             width: 100%;
             padding: 15px;
@@ -152,13 +131,10 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
         .view-dashboard-btn:hover {
             background: linear-gradient(135deg, #2563eb, #1e40af);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
-        
         .add-candidate-card {
             background: rgba(59, 130, 246, 0.1);
             border: 2px dashed rgba(59, 130, 246, 0.3);
@@ -171,25 +147,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
         .add-candidate-card:hover {
             background: rgba(59, 130, 246, 0.15);
             border-color: #3b82f6;
-            transform: translateY(-5px);
         }
-        
-        .add-icon {
-            font-size: 64px;
-            color: #3b82f6;
-            margin-bottom: 20px;
-        }
-        
-        .add-text {
-            font-size: 18px;
-            color: #94a3b8;
-            font-weight: 600;
-        }
-        
+        .add-icon { font-size: 64px; color: #3b82f6; margin-bottom: 20px; }
+        .add-text { font-size: 18px; color: #94a3b8; font-weight: 600; }
         .footer {
             text-align: center;
             padding: 40px 20px;
@@ -197,130 +160,205 @@
             border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: 60px;
         }
-        
-        .footer p {
-            margin-bottom: 10px;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-        
-        .status-active {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-        
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 32px;
-            }
-            
-            .candidates-grid {
-                grid-template-columns: 1fr;
-            }
+            .header h1 { font-size: 32px; }
+            .candidates-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>📊 Campaign Performance Dashboard</h1>
             <p>Real-time metrics and analytics for progressive campaigns</p>
         </div>
         
-        <!-- Candidates Grid -->
-        <div class="candidates-grid">
-            <!-- Junaid Ahmed Card -->
-            <div class="candidate-card" onclick="openDashboard('junaid-ahmed')">
-                <img 
-                    src="https://secure.actblue.com/x/object/actblue-cyanotypes/replaced_images/list/733532/a9c2a006-1f64-4755-9c18-5679de7e1db7-JunaidAhmed-3464df39.jpg" 
-                    alt="Junaid Ahmed"
-                    class="candidate-image"
-                    onerror="this.style.background='linear-gradient(135deg, #1e293b, #334155)'; this.alt='Photo coming soon';"
-                >
-                <div class="candidate-info">
-                    <span class="status-badge status-active">⚡ Active Campaign</span>
-                    <h2 class="candidate-name">Junaid Ahmed</h2>
-                    <div class="candidate-district">Illinois 8th District</div>
-                    <div class="candidate-party">Democratic Primary</div>
-                    
-                    <div class="candidate-stats">
-                        <div class="stat-box">
-                            <div class="stat-box-value">$838K</div>
-                            <div class="stat-box-label">Raised</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-value">83.8%</div>
-                            <div class="stat-box-label">of Goal</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-value">17.6K</div>
-                            <div class="stat-box-label">Donors</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-value" id="daysLeftCard">468</div>
-                            <div class="stat-box-label">Days Left</div>
-                        </div>
-                    </div>
-                    
-                    <button class="view-dashboard-btn" onclick="openDashboard('junaid-ahmed'); event.stopPropagation();">
-                        View Dashboard →
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Add New Candidate Card -->
-            <div class="add-candidate-card" onclick="addNewCandidate()">
-                <div class="add-icon">+</div>
-                <div class="add-text">Add New Candidate</div>
-                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">Track multiple campaigns</p>
-            </div>
-        </div>
+        <div class="candidates-grid" id="candidatesGrid"></div>
         
-        <!-- Footer -->
         <div class="footer">
-            <p><strong>Campaign Dashboard v1.0</strong></p>
+            <p><strong>Campaign Dashboard v2.0</strong></p>
             <p>Built for progressive campaigns • Powered by real-time data</p>
-            <p style="margin-top: 20px; font-size: 12px;">
-                📊 FEC Data • 📱 Social Analytics • 🗺️ Precinct Mapping • 💰 Fundraising Tracking
-            </p>
         </div>
     </div>
     
     <script>
-        // Open candidate dashboard
-        function openDashboard(candidateSlug) {
-            // Navigate to the candidate's dashboard page
-            window.location.href = `dashboard-${candidateSlug}.html`;
-        }
+        // ============================================
+        // 🔑 CANDIDATES CONFIGURATION
+        // ============================================
+        // TO ADD A NEW CANDIDATE: Copy the entire candidate object below and customize it!
         
-        // Add new candidate
-        function addNewCandidate() {
-            alert('To add a new candidate:\n\n1. See CANDIDATE_TEMPLATE.md for instructions\n2. Or upload this file to Claude and ask: "Add [Candidate Name] to this dashboard"\n3. I\'ll create their card and dashboard page for you!');
-        }
-        
-        // Calculate days until primary
-        function updateCountdown() {
-            const primaryDate = new Date('2026-03-17');
-            const today = new Date();
-            const daysLeft = Math.floor((primaryDate - today) / (1000 * 60 * 60 * 24));
+        const CANDIDATES = {
+            junaidAhmed: {
+                // Basic Info
+                id: 'junaid-ahmed',
+                name: "Junaid Ahmed",
+                district: "Illinois 8th District",
+                party: "Democratic",
+                primaryDate: "2026-03-17",
+                
+                // Photo
+                photoUrl: "https://secure.actblue.com/x/object/actblue-cyanotypes/replaced_images/list/733532/a9c2a006-1f64-4755-9c18-5679de7e1db7-JunaidAhmed-3464df39.jpg",
+                
+                // FEC Data
+                fecCandidateId: "H2IL08146",
+                
+                // Fundraising (will be auto-updated from FEC if API key is provided)
+                fundraising: {
+                    totalRaised: 838383,
+                    goalQ4: 1000000,
+                    donorCount: 17576,
+                    cashOnHand: 659849
+                },
+                
+                // Campaign Issues
+                keyIssues: [
+                    { name: "Campaign Finance Reform", score: 89 },
+                    { name: "Medicare for All", score: 85 },
+                    { name: "Climate Action", score: 82 },
+                    { name: "Student Debt Relief", score: 78 },
+                    { name: "Workers Rights", score: 76 },
+                    { name: "Affordable Housing", score: 74 }
+                ],
+                
+                // Endorsements
+                endorsements: [
+                    "Rep. Ro Khanna (CA-17)",
+                    "Congressional Progressive Caucus"
+                ],
+                
+                // Precinct Data
+                precincts: [
+                    { name: "Schaumburg", registered: 12500, turnout: 68, support: 54 },
+                    { name: "Barrington", registered: 8900, turnout: 72, support: 61 },
+                    { name: "Palatine", registered: 15200, turnout: 65, support: 48 },
+                    { name: "Hoffman Estates", registered: 11800, turnout: 63, support: 52 },
+                    { name: "Elgin", registered: 18400, turnout: 58, support: 59 },
+                    { name: "Des Plaines", registered: 9700, turnout: 70, support: 56 }
+                ],
+                
+                // Links
+                website: "junaidforus.com",
+                instagram: "@junaidforus"
+            }
             
-            document.getElementById('daysLeftCard').textContent = daysLeft;
+            // ============================================
+            // TO ADD MORE CANDIDATES:
+            // ============================================
+            // 1. Add a comma after the closing brace above
+            // 2. Copy the entire junaidAhmed object
+            // 3. Paste below and change the key name
+            // 4. Update all values
+            // 5. Save!
+            //
+            // Example:
+            // ,
+            // sarahJohnson: {
+            //     id: 'sarah-johnson',
+            //     name: "Sarah Johnson",
+            //     district: "Illinois 6th District",
+            //     party: "Democratic",
+            //     primaryDate: "2026-03-17",
+            //     photoUrl: "URL_TO_PHOTO",
+            //     fecCandidateId: "H2IL06XXX",
+            //     fundraising: { ... },
+            //     keyIssues: [ ... ],
+            //     endorsements: [ ... ],
+            //     precincts: [ ... ],
+            //     website: "...",
+            //     instagram: "..."
+            // }
+        };
+        
+        // ============================================
+        // 📊 RENDER CANDIDATES
+        // ============================================
+        
+        function calculateDaysLeft(primaryDate) {
+            const target = new Date(primaryDate);
+            const today = new Date();
+            return Math.floor((target - today) / (1000 * 60 * 60 * 24));
+        }
+        
+        function formatMoney(amount) {
+            if (amount >= 1000000) {
+                return '$' + (amount / 1000000).toFixed(1) + 'M';
+            }
+            return '$' + (amount / 1000).toFixed(0) + 'K';
+        }
+        
+        function renderCandidates() {
+            const grid = document.getElementById('candidatesGrid');
+            
+            // Render each candidate
+            Object.entries(CANDIDATES).forEach(([key, candidate]) => {
+                const daysLeft = calculateDaysLeft(candidate.primaryDate);
+                const goalPercent = ((candidate.fundraising.totalRaised / candidate.fundraising.goalQ4) * 100).toFixed(1);
+                
+                const card = document.createElement('div');
+                card.className = 'candidate-card';
+                card.onclick = () => window.location.href = `dashboard.html?candidate=${candidate.id}`;
+                
+                card.innerHTML = `
+                    <img 
+                        src="${candidate.photoUrl}" 
+                        alt="${candidate.name}"
+                        class="candidate-image"
+                        onerror="this.style.background='linear-gradient(135deg, #1e293b, #334155)'"
+                    >
+                    <div class="candidate-info">
+                        <span class="status-badge">⚡ Active Campaign</span>
+                        <h2 class="candidate-name">${candidate.name}</h2>
+                        <div class="candidate-district">${candidate.district}</div>
+                        <div class="candidate-party">${candidate.party} Primary</div>
+                        
+                        <div class="candidate-stats">
+                            <div class="stat-box">
+                                <div class="stat-box-value">${formatMoney(candidate.fundraising.totalRaised)}</div>
+                                <div class="stat-box-label">Raised</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">${goalPercent}%</div>
+                                <div class="stat-box-label">of Goal</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">${(candidate.fundraising.donorCount / 1000).toFixed(1)}K</div>
+                                <div class="stat-box-label">Donors</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">${daysLeft}</div>
+                                <div class="stat-box-label">Days Left</div>
+                            </div>
+                        </div>
+                        
+                        <button class="view-dashboard-btn" onclick="window.location.href='dashboard.html?candidate=${candidate.id}'; event.stopPropagation();">
+                            View Dashboard →
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // Add "Add Candidate" card
+            const addCard = document.createElement('div');
+            addCard.className = 'add-candidate-card';
+            addCard.onclick = () => {
+                alert('To add a new candidate:\n\n1. Open index.html in a text editor\n2. Find the CANDIDATES section (line 150)\n3. Add a comma after junaidAhmed closing brace\n4. Copy the junaidAhmed object\n5. Paste and customize\n6. Save and reload!\n\nOR upload to Claude and say "Add [name]"');
+            };
+            addCard.innerHTML = `
+                <div class="add-icon">+</div>
+                <div class="add-text">Add New Candidate</div>
+                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">Track multiple campaigns</p>
+            `;
+            
+            grid.appendChild(addCard);
         }
         
         // Initialize
-        updateCountdown();
+        renderCandidates();
         
-        console.log('✅ Campaign Dashboard Landing Page Loaded');
-        console.log('📊 Click Junaid Ahmed\'s card to view his detailed dashboard');
+        console.log('✅ Landing page loaded');
+        console.log(`📊 ${Object.keys(CANDIDATES).length} candidate(s) configured`);
     </script>
 </body>
 </html>
